@@ -1,0 +1,46 @@
+.cart {
+  padding: 1rem;
+  max-width: 1440px;
+  margin: auto;
+}
+
+.container {
+  max-width: 650px;
+  margin: auto;
+}
+
+.cart .row {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.productList {
+  flex: 100%;
+}
+
+.empty {
+  text-align: center;
+}
+
+.empty button {
+  margin: 1rem 0;
+}
+
+@media (min-width: 992px) {
+  .cart {
+    padding: 1rem 5%;
+  }
+
+  .container {
+    max-width: 100%;
+  }
+
+  .productList {
+    flex: 50%;
+  }
+
+  .productList {
+    padding-right: 1rem;
+  }
+}

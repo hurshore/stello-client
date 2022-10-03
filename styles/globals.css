@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+#card-error {
+  color: rgb(105, 115, 134);
+  font-size: 16px;
+  line-height: 20px;
+  margin-top: 12px;
+  text-align: center;
+}
+#card-element {
+  border-radius: 4px 4px 0 0;
+  padding: 12px;
+  border: 1px solid rgba(50, 50, 93, 0.1);
+  max-height: 44px;
+  width: 100%;
+  background: white;
+  box-sizing: border-box;
+}
+#payment-request-button {
+  margin-bottom: 32px;
+}
+
+.ais-SearchBox-form {
+  position: relative;
+}
+
+.ais-SearchBox-input {
+  z-index: 1;
+  background-color: #F4F5F7;
+  width: 100%;
+  padding: 1.2rem 3.5rem 1.2rem 3rem;
+  border: none;
+  font-size: 1.1rem;
+}
+
+.ais-SearchBox-submit {
+  background: transparent;
+  border: none;
+  position: absolute;
+  top: 17px;
+  left: 14px;
+  z-index: 1;
+}
+
+.ais-SearchBox-submitIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.ais-SearchBox-reset {
+  display: none;
+}

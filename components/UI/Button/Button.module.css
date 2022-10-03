@@ -1,0 +1,14 @@
+.btn {
+  background-color: #EB5125;
+  color: #FFF;
+  font-weight: 600;
+  padding: .8rem 2rem;
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
