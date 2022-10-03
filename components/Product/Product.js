@@ -4,37 +4,40 @@ import Image from 'next/image';
 import { useDispatchCart } from '../../context/cartContext';
 import { useAuth } from '../../context/authContext';
 import * as actionTypes from '../../context/actionTypes';
+import { baseApiUrl } from '../../api/utility';
 
 const product = ({ product }) => {
   const [productQuantity, setProductQuantity] = useState(product.quantity);
-  const [prevProductQuantity, setPrevProductQuantity] = useState(product.quantity);
+  const [prevProductQuantity, setPrevProductQuantity] = useState(
+    product.quantity
+  );
   const dispatchCart = useDispatchCart();
   const authState = useAuth();
   const { token } = authState;
 
   const clearItem = async () => {
-    if(token) {
+    if (token) {
       try {
-        const res = await fetch('https://nodejs-estore.herokuapp.com/api/cart/clear', {
+        const res = await fetch(`${baseApiUrl}/cart/clear`, {
           method: 'DELETE',
           headers: {
             'auth-token': token,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ productId: product._id })
-        })
+          body: JSON.stringify({ productId: product._id }),
+        });
         const data = await res.json();
-      } catch(err) {
+      } catch (err) {
         console.log(err);
       }
     }
     dispatchCart({
       type: actionTypes.CLEAR_FROM_CART,
       payload: {
-        productId: product._id
-      }
-    })
-  }
+        productId: product._id,
+      },
+    });
+  };
 
   const incrementQuantity = async () => {
     const productToAdd = {
@@ -43,24 +46,24 @@ const product = ({ product }) => {
       price: product.price,
       img: product.img,
       quantity: productQuantity - prevProductQuantity,
-      colors: product.colors
-    }
+      colors: product.colors,
+    };
 
-    if(token) {
+    if (token) {
       try {
-        const res = await fetch('https://nodejs-estore.herokuapp.com/api/cart', {
+        const res = await fetch(`${baseApiUrl}/cart`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'auth-token': token
+            'auth-token': token,
           },
           body: JSON.stringify(productToAdd),
-        })
-        if(!res.ok) {
+        });
+        if (!res.ok) {
           throw res.clone.json();
         }
         const data = await res.json();
-      } catch(err) {
+      } catch (err) {
         console.log(err);
       }
     }
@@ -70,29 +73,29 @@ const product = ({ product }) => {
       type: actionTypes.ADD_TO_CART,
       payload: {
         product: productToAdd,
-        auth: token ? true : false
-      }
+        auth: token ? true : false,
+      },
     });
-  }
+  };
 
   const decrementQuantity = async () => {
     const productToDelete = {
       productId: product._id,
-      quantity: prevProductQuantity - productQuantity
-    }
-    
-    if(token) {
+      quantity: prevProductQuantity - productQuantity,
+    };
+
+    if (token) {
       try {
-        const res = await fetch('https://nodejs-estore.herokuapp.com/api/cart', {
+        const res = await fetch(`${baseApiUrl}/cart`, {
           method: 'DELETE',
           headers: {
             'auth-token': token,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
-          body: JSON.stringify(productToDelete)
-        })
+          body: JSON.stringify(productToDelete),
+        });
         const data = await res.json();
-      } catch(err) {
+      } catch (err) {
         console.log(err);
       }
     }
@@ -103,23 +106,23 @@ const product = ({ product }) => {
       payload: {
         productId: product._id,
         quantity: prevProductQuantity - productQuantity,
-        auth: token ? true : false
-      }
-    })
-  }
+        auth: token ? true : false,
+      },
+    });
+  };
 
   useEffect(() => {
-    if(productQuantity === prevProductQuantity) return;
+    if (productQuantity === prevProductQuantity) return;
     let timeout;
-    
-    if(productQuantity > prevProductQuantity) {
-      if(!token) {
-        incrementQuantity()
+
+    if (productQuantity > prevProductQuantity) {
+      if (!token) {
+        incrementQuantity();
       } else {
         timeout = setTimeout(() => incrementQuantity(), 1000);
       }
     } else {
-      if(!token) {
+      if (!token) {
         decrementQuantity();
       } else {
         timeout = setTimeout(() => decrementQuantity(), 1000);
@@ -128,22 +131,30 @@ const product = ({ product }) => {
 
     return () => {
       clearTimeout(timeout);
-    }
-  }, [productQuantity])
+    };
+  }, [productQuantity]);
 
   return (
     <div key={product._id} className={classes.productContainer}>
       <div className={classes.productImage}>
-        <Image src={product.img} alt="product" width={100} height={100} objectFit="contain" />
+        <Image
+          src={product.img}
+          alt="product"
+          width={100}
+          height={100}
+          objectFit="contain"
+        />
       </div>
       <div className={classes.productDetails}>
         <h4>{product.name}</h4>
         <p className={classes.productColor}>
           <span>Colors: </span>
-          {product.colors && product.colors.map((color, index) => {
-            if(index + 1 < product.colors.length) return (<span key={color}>{color}, </span>);
-            return (<span key={color}>{color}</span>);
-          })}
+          {product.colors &&
+            product.colors.map((color, index) => {
+              if (index + 1 < product.colors.length)
+                return <span key={color}>{color}, </span>;
+              return <span key={color}>{color}</span>;
+            })}
         </p>
         <h3 className={classes.price}>${product.price}</h3>
         <p className={classes.shipping}>Shipping: $0</p>
@@ -152,12 +163,20 @@ const product = ({ product }) => {
         <Image src="/delete.svg" alt="delete" width={20} height={20} />
       </div>
       <div className={classes.quantity}>
-        <button onClick={() => productQuantity > 1 && setProductQuantity(productQuantity - 1)}>-</button>
+        <button
+          onClick={() =>
+            productQuantity > 1 && setProductQuantity(productQuantity - 1)
+          }
+        >
+          -
+        </button>
         <span>{productQuantity}</span>
-        <button onClick={() => setProductQuantity(productQuantity + 1)}>+</button>
+        <button onClick={() => setProductQuantity(productQuantity + 1)}>
+          +
+        </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default product;

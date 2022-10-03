@@ -3,6 +3,7 @@ import Nav from '../Nav/Nav';
 import { useAuth, useDispatchAuth } from '../../context/authContext';
 import { useDispatchCart } from '../../context/cartContext';
 import * as actionTypes from '../../context/actionTypes';
+import { baseApiUrl } from '../../api/utility';
 
 const layout = (props) => {
   const authState = useAuth();
@@ -13,33 +14,33 @@ const layout = (props) => {
   useEffect(() => {
     // Try to log in automatically
     const token = localStorage.getItem('auth-token');
-    if(token) {
+    if (token) {
       dispatchAuth({
         type: actionTypes.SET_TOKEN,
-        payload: token
-      })
+        payload: token,
+      });
     }
   }, [token]);
 
   useEffect(async () => {
-    if(token) {
+    if (token) {
       // Get user's cart
       const cart = JSON.parse(localStorage.getItem('cart'));
-      if(cart) {
+      if (cart) {
         // Add cart in local storage to the db
         try {
-          const res = await fetch('https://nodejs-estore.herokuapp.com/api/cart/batch', {
+          const res = await fetch(`${baseApiUrl}/cart/batch`, {
             method: 'POST',
             headers: {
               'auth-token': token,
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
             },
-            body: JSON.stringify(cart)
-          })
+            body: JSON.stringify(cart),
+          });
           await res.json();
           localStorage.removeItem('cart');
           fetchCart();
-        } catch(err) {
+        } catch (err) {
           console.log(err);
         }
       } else {
@@ -48,23 +49,23 @@ const layout = (props) => {
     } else {
       // Get cart from local storage
       const cart = JSON.parse(localStorage.getItem('cart'));
-      if(cart) {
+      if (cart) {
         dispatchCart({
           type: actionTypes.SET_CART,
           payload: {
-            cart
-          }
-        })
+            cart,
+          },
+        });
       }
     }
-  }, [token])
+  }, [token]);
 
   const fetchCart = async () => {
-    const res = await fetch('https://nodejs-estore.herokuapp.com/api/cart', {
+    const res = await fetch(`${baseApiUrl}/cart`, {
       headers: {
         'auth-token': token,
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
     const data = await res.json();
 
@@ -74,20 +75,18 @@ const layout = (props) => {
         cart: {
           products: data.products,
           quantity: data.quantity,
-          total: data.total
-        }
-      }
-    })
-  }
+          total: data.total,
+        },
+      },
+    });
+  };
 
   return (
     <>
       <Nav />
-      <main>
-        {props.children}
-      </main>
+      <main>{props.children}</main>
     </>
-  )
-}
+  );
+};
 
 export default layout;
