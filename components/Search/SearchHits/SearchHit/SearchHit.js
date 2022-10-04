@@ -7,10 +7,10 @@ const Hit = ({ hit, clicked }) => {
   const redirectToProduct = (id) => {
     router.push(`/shop/product/${id}`);
     clicked();
-  }
+  };
 
   return (
-    <div className={classes.hit} onClick={() => redirectToProduct(hit.objectID)}>
+    <div className={classes.hit} onClick={() => redirectToProduct(hit._id)}>
       <div className={classes.image}>
         <Image src={hit.img} alt="product" width={40} height={40} />
       </div>
@@ -19,7 +19,7 @@ const Hit = ({ hit, clicked }) => {
         <p className={classes.price}>${hit.price}</p>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Hit;
